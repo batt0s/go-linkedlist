@@ -16,6 +16,7 @@ type Node struct {
 }
 
 func (ll *LinkedList) NodeWithVal(prop int) (*Node, bool) {
+	// Eğer burası da LAstNode gibi çağırılacaksa Lock edilmemeli.
 	ll.mu.Lock()
 	defer ll.mu.Unlock()
 	var node *Node
@@ -28,8 +29,8 @@ func (ll *LinkedList) NodeWithVal(prop int) (*Node, bool) {
 }
 
 func (ll *LinkedList) LastNode() (*Node, bool) {
-	ll.mu.Lock()
-	defer ll.mu.Unlock()
+	//ll.mu.Lock()
+	//defer ll.mu.Unlock()
 	var node *Node
 	for node = ll.headNode; node != nil; node = node.nextNode {
 		if node.nextNode == nil {
