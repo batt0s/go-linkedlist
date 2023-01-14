@@ -2,12 +2,10 @@ package linkedlist
 
 import (
 	"fmt"
-	"sync"
 )
 
 type LinkedList struct {
 	headNode *Node
-	mu       sync.Mutex
 }
 
 type Node struct {
@@ -15,22 +13,21 @@ type Node struct {
 	nextNode *Node
 }
 
+// Get Node with Value
 func (ll *LinkedList) NodeWithVal(prop int) (*Node, bool) {
-	// Eğer burası da LAstNode gibi çağırılacaksa Lock edilmemeli.
-	ll.mu.Lock()
-	defer ll.mu.Unlock()
-	var node *Node
-	for node = ll.headNode; node != nil; node = node.nextNode {
+	node := ll.headNode
+	for node != nil {
+		fmt.Println(node)
 		if node.property == prop {
 			return node, true
 		}
+		node = node.nextNode
 	}
 	return nil, false
 }
 
+// Get Last Node
 func (ll *LinkedList) LastNode() (*Node, bool) {
-	//ll.mu.Lock()
-	//defer ll.mu.Unlock()
 	var node *Node
 	for node = ll.headNode; node != nil; node = node.nextNode {
 		if node.nextNode == nil {
@@ -40,9 +37,8 @@ func (ll *LinkedList) LastNode() (*Node, bool) {
 	return nil, false
 }
 
+// Add to head
 func (ll *LinkedList) AddToHead(prop int) {
-	ll.mu.Lock()
-	defer ll.mu.Unlock()
 	var node = &Node{
 		property: prop,
 		nextNode: nil,
@@ -53,9 +49,8 @@ func (ll *LinkedList) AddToHead(prop int) {
 	ll.headNode = node
 }
 
+// Add to end
 func (ll *LinkedList) AddToEnd(prop int) {
-	ll.mu.Lock()
-	defer ll.mu.Unlock()
 	node := &Node{
 		property: prop,
 		nextNode: nil,
@@ -64,27 +59,23 @@ func (ll *LinkedList) AddToEnd(prop int) {
 	lastNode.nextNode = node
 }
 
+// Add after value
 func (ll *LinkedList) AddAfter(addAfter, prop int) bool {
-	ll.mu.Lock()
-	defer ll.mu.Unlock()
 	node := &Node{
 		property: prop,
 		nextNode: nil,
 	}
-	var nodeAddAfter *Node
-	for nodeAddAfter = ll.headNode; nodeAddAfter != nil; nodeAddAfter = nodeAddAfter.nextNode {
-		if nodeAddAfter.property == addAfter {
-			node.nextNode = nodeAddAfter.nextNode
-			nodeAddAfter.nextNode = node
-			return true
-		}
+	nodeAddAfter, ok := ll.NodeWithVal(addAfter)
+	if !ok {
+		return false
 	}
-	return false
+	node.nextNode = nodeAddAfter.nextNode
+	nodeAddAfter.nextNode = node
+	return true
 }
 
+// Delete Node
 func (ll *LinkedList) DeleteNode(prop int) bool {
-	ll.mu.Lock()
-	defer ll.mu.Unlock()
 	var node *Node
 	for node = ll.headNode; node != nil; node = node.nextNode {
 		if node.property == prop {
@@ -99,7 +90,7 @@ func (ll *LinkedList) DeleteNode(prop int) bool {
 			return false
 		}
 	}
-	var prevNode *Node = ll.headNode
+	prevNode := ll.headNode
 	for prevNode != nil {
 		if prevNode.nextNode == node {
 			prevNode.nextNode = node.nextNode
@@ -110,9 +101,9 @@ func (ll *LinkedList) DeleteNode(prop int) bool {
 }
 
 func (ll *LinkedList) IterateList() {
-	ll.mu.Lock()
-	defer ll.mu.Unlock()
 	for n := ll.headNode; n != nil; n = n.nextNode {
 		fmt.Printf("%+v ", n.property)
 	}
 }
+
+// TODO Sort()
