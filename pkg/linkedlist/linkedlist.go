@@ -163,9 +163,8 @@ func (ll *LinkedList) Sort() {
 		for j := 0; j < n-i-1; j++ {
 			n1 := h
 			n2 := n1.nextNode
-			fmt.Printf("n1: %s, n1.next: %s\n", n1.String(), n1.nextNode.String())
 			if n1.property > n2.property {
-				swap(n1, n2)
+				swapProps(n1, n2)
 				swapped = true
 			}
 			h = h.nextNode
@@ -176,8 +175,8 @@ func (ll *LinkedList) Sort() {
 	}
 }
 
-func swap(node1 *Node, node2 *Node) {
-	temp := node2.nextNode
-	node2.nextNode = node1
-	node1.nextNode = temp
+func swapProps(node1 *Node, node2 *Node) {
+	temp := node2.property
+	node2.property = node1.property
+	node1.property = temp
 }
