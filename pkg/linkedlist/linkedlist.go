@@ -148,14 +148,12 @@ func (ll *LinkedList) AsArray() []int {
 
 // Add two linkedlists
 func AddLinkedLists(ll1 *LinkedList, ll2 *LinkedList) *LinkedList {
-	var ll *LinkedList
 	n, ok := ll1.LastNode()
 	if !ok {
 		return nil
 	}
 	n.nextNode = ll2.headNode
-	ll.headNode = ll1.headNode
-	return ll
+	return ll1
 }
 
 // Sort the list
