@@ -1,19 +1,30 @@
 package main
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/batt0s/go-linkedlist/pkg/linkedlist"
 )
 
 func main() {
-	ll := linkedlist.LinkedList{}
-	ll.AddToHead(3)
-	ll.AddToEnd(5)
-	ll.AddAfter(3, 33)
-	ll.AddToEnd(1)
+	ll, err := linkedlist.New(3, 33, 5, 1)
+	if err != nil {
+		log.Fatalf("Error while creating new linkedlist.\n%v", err)
+	}
 
 	ll.IterateList()
+	fmt.Println()
 
 	ll.Sort()
+
+	ll.IterateList()
+	fmt.Println()
+
+	ok := ll.DeleteNode(33)
+	if !ok {
+		log.Fatalln("Error while deleting node.")
+	}
 
 	ll.IterateList()
 

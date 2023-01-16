@@ -1,3 +1,4 @@
+// TODO Better error handling
 package linkedlist
 
 import (
@@ -21,11 +22,26 @@ func (n *Node) String() string {
 	return fmt.Sprintf("Node{prop: %d, next: %v}", n.property, n.nextNode)
 }
 
+// New LinkedList with given values
+func New(props ...int) (*LinkedList, error) {
+	ll := new(LinkedList)
+	if len(props) < 1 {
+		return ll, nil
+	}
+	for i, prop := range props {
+		if i == 0 {
+			ll.AddToHead(prop)
+		} else {
+			ll.AddToEnd(prop)
+		}
+	}
+	return ll, nil
+}
+
 // Get Node with Value
 func (ll *LinkedList) NodeWithVal(prop int) (*Node, bool) {
 	node := ll.headNode
 	for node != nil {
-		fmt.Println(node)
 		if node.property == prop {
 			return node, true
 		}
@@ -84,11 +100,9 @@ func (ll *LinkedList) AddAfter(addAfter, prop int) bool {
 
 // Delete Node
 func (ll *LinkedList) DeleteNode(prop int) bool {
-	var node *Node
-	for node = ll.headNode; node != nil; node = node.nextNode {
-		if node.property == prop {
-			break
-		}
+	node, ok := ll.NodeWithVal(prop)
+	if !ok {
+		return false
 	}
 	if node == ll.headNode {
 		if node.nextNode != nil {
@@ -98,8 +112,7 @@ func (ll *LinkedList) DeleteNode(prop int) bool {
 			return false
 		}
 	}
-	prevNode := ll.headNode
-	for prevNode != nil {
+	for prevNode := ll.headNode; prevNode != nil; prevNode = prevNode.nextNode {
 		if prevNode.nextNode == node {
 			prevNode.nextNode = node.nextNode
 			return true
