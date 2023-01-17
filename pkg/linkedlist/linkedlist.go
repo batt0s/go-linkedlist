@@ -18,8 +18,20 @@ func (ll *LinkedList) String() string {
 	return fmt.Sprintf("LinkedList{%v}", ll.AsArray())
 }
 
+func (ll *LinkedList) Head() *Node {
+	return ll.headNode
+}
+
 func (n *Node) String() string {
 	return fmt.Sprintf("Node{prop: %d, next: %v}", n.property, n.nextNode)
+}
+
+func (n *Node) Value() int {
+	return n.property
+}
+
+func (n *Node) Next() *Node {
+	return n.nextNode
 }
 
 // New LinkedList with given values
